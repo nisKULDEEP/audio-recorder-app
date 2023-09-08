@@ -1,0 +1,28 @@
+.header-parent-container {
+    box-shadow: #eee 0px 15px 10px -10px;
+    background-color: aliceblue;
+}
+.header-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #eee;
+}
+
+h3 {
+    cursor: pointer;
+}
+
+.navigation-links {
+    display: flex;
+    flex-direction: row;
+    column-gap: 16px;
+}
+
+.navigation-links > a {
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 800;
+}
