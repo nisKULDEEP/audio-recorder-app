@@ -66,6 +66,14 @@ const Header = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
+            dispatch(
+                setAuthenticated({
+                    isLoggedIn: false,
+                    user: '',
+                    stage: 'UNAUTHENTICATED',
+                    userId: ''
+                })
+            );
             navigate('/login');
         }
     }, [window.location.href]);
