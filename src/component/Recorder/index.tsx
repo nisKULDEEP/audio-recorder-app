@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import ContentWrapper from '../ContentWrapper';
 import './index.css';
+import axiosInstance from '../../store/axiosConfig';
+import toast from 'react-hot-toast';
 
 const Recorder = () => {
     const [isRecording, setIsRecording] = useState(false);
@@ -9,28 +11,35 @@ const Recorder = () => {
     const [audioURL, setAudioURL] = useState(null);
     const [isRecordingSaved, setIsRecordingSaved] = useState(false);
     const [audioBlob, setAudioBlob] = useState(null);
+    const [selectedOption, setSelectedOption] = useState('Focused Listening');
 
-    const saveRecording = () => {
-        if (audioURL) {
-            // Create a FormData object to send the audio blob to the server
+    const handleSelectChange = (event: any) => {
+        setSelectedOption(event.target.value);
+    };
+
+    const saveRecording = async () => {
+        if (audioBlob) {
             const formData = new FormData();
-            formData.append('audio', audioBlob); // Assuming you have the audioBlob available
+            formData.append('audioFile', audioBlob, 'recording.ogg');
+            formData.append('type', selectedOption);
 
-            fetch('/api/save-recording', {
-                method: 'POST',
-                body: formData
-            })
-                .then((response) => {
-                    if (response.ok) {
-                        setIsRecordingSaved(true);
-                        console.log('Recording saved successfully!');
-                    } else {
-                        console.error('Failed to save recording.');
+            const response = await axiosInstance
+                .post('/recording/upload', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        token: localStorage.getItem('token')
                     }
                 })
-                .catch((error) => {
-                    console.error('Error saving recording:', error);
-                });
+                .then((response: any) => {
+                    setIsRecordingSaved(true);
+                    toast.success('Recording saved successfully!');
+                    setAudioURL(null);
+                })
+                .catch((err) =>
+                    toast.error(
+                        err?.response?.data?.message || 'Something went wrong'
+                    )
+                );
         }
     };
 
@@ -74,7 +83,6 @@ const Recorder = () => {
 
     useEffect(() => {
         return () => {
-            // Clean up when unmounting
             if (mediaRecorder && isRecording) {
                 mediaRecorder.stop();
             }
@@ -84,15 +92,40 @@ const Recorder = () => {
     return (
         <ContentWrapper>
             <div className="recorder-container">
-                {isRecordingSaved && <p>Recording saved successfully!</p>}
-                {isRecording ? (
-                    <button
-                        className="stop-button"
-                        role="button"
-                        onClick={stopRecording}
+                <div className="select-container">
+                    <label>Select a focus type:</label>
+                    <select
+                        value={selectedOption}
+                        onChange={handleSelectChange}
                     >
-                        Stop Recording
-                    </button>
+                        <option value="Internal Listening">
+                            Internal Listening
+                        </option>
+                        <option
+                            value="Focused
+                Listening"
+                        >
+                            Focused Listening
+                        </option>
+                        <option value="Global Listening">
+                            Global Listening
+                        </option>
+                    </select>
+                </div>
+
+                {isRecording ? (
+                    <>
+                        <button
+                            className="stop-button"
+                            role="button"
+                            onClick={stopRecording}
+                        >
+                            Stop Recording
+                        </button>
+                        <a href="#" className="button active" id="active">
+                            <i className="fas fa-microphone"></i>
+                        </a>
+                    </>
                 ) : (
                     <button
                         className="start-button"
@@ -102,8 +135,9 @@ const Recorder = () => {
                         Start Recording
                     </button>
                 )}
+
                 {audioURL && (
-                    <div>
+                    <div className="recorder-audio-container">
                         <p>Recorded Audio:</p>
                         <div className="recorder-audio-actions">
                             <audio controls src={audioURL}></audio>

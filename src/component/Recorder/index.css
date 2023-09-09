@@ -134,4 +134,38 @@
 .recorder-audio-actions {
     display: flex;
     column-gap: 24px;
+    @media only screen and (max-width: 480px) {
+        flex-direction: column;
+        row-gap: 18px;
+        align-items: center;
+    }
+}
+
+.select-container {
+    margin: auto;
+    display: flex;
+    column-gap: 8px;
+    @media only screen and (max-width: 480px) {
+        flex-direction: column;
+        row-gap: 18px;
+    }
+}
+
+select {
+    width: 250px;
+    padding: 0px 18px;
+    height: 30px;
+}
+
+label {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.recorder-audio-container {
+    display: flex;
+    @media only screen and (max-width: 480px) {
+        flex-direction: column;
+        row-gap: 18px;
+    }
 }
