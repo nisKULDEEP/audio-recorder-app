@@ -40,6 +40,8 @@ const Recorder = () => {
                         err?.response?.data?.message || 'Something went wrong'
                     )
                 );
+        } else {
+            toast.error('Recording not found, please refresh the page.');
         }
     };
 
@@ -70,7 +72,7 @@ const Recorder = () => {
             setIsRecording(true);
             setMediaRecorder(recorder);
         } catch (error) {
-            console.error('Error accessing microphone:', error);
+            toast.error('Error accessing microphone:');
         }
     };
 

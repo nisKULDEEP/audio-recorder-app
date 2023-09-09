@@ -2,10 +2,15 @@ import { useEffect, useState } from 'react';
 import ContentWrapper from '../ContentWrapper';
 import './index.css';
 import axiosInstance from '../../store/axiosConfig';
+import toast from 'react-hot-toast';
 
 const History = () => {
     const [recordingListing, setRecordingListing] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [localError, setLocalError] = useState({
+        status: false,
+        message: ''
+    });
 
     const getRecordings = async () => {
         setIsLoading(true);
@@ -26,6 +31,10 @@ const History = () => {
                 })
             );
         } catch (error) {
+            setLocalError({
+                status: true,
+                message: error.response.data.message
+            });
             toast.error(
                 error?.response?.data?.message || 'Something went wrong'
             );
@@ -41,18 +50,29 @@ const History = () => {
                     token: localStorage.getItem('token')
                 }
             });
+            getRecordings();
+            toast.success('Recording deleted successfully');
         } catch (error) {
-            console.log(error);
+            toast.error(
+                error?.response?.data?.message || 'Something went wrong'
+            );
         }
     };
     useEffect(() => {
         getRecordings();
     }, []);
 
+    if (localError.status) {
+        return (
+            <ContentWrapper>
+                <div>{localError.message || 'Something went wrong'}</div>
+            </ContentWrapper>
+        );
+    }
+
     if (isLoading) {
         return (
             <ContentWrapper>
-                {' '}
                 <div>Loading...</div>
             </ContentWrapper>
         );

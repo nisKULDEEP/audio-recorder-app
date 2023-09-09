@@ -8,6 +8,8 @@ import axiosInstance from '../../store/axiosConfig';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
+const loginExceptEndpoints = ['/login', '/signup'];
+
 const Header = () => {
     const isLoggedIn = useSelector(selectLoggedIn);
     const isMobile = useIsMobile();
@@ -65,7 +67,10 @@ const Header = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (!token) {
+        if (
+            !token &&
+            !loginExceptEndpoints.includes(window.location.pathname)
+        ) {
             dispatch(
                 setAuthenticated({
                     isLoggedIn: false,
@@ -76,7 +81,7 @@ const Header = () => {
             );
             navigate('/login');
         }
-    }, [window.location.href]);
+    }, [window.location.pathname]);
 
     return (
         <div className="header-parent-container">
