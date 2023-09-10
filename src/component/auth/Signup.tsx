@@ -8,6 +8,7 @@ import { setAuthenticated } from '../../store/authReducer';
 import './index.css';
 import toast from 'react-hot-toast';
 import { ResponseType } from '../interface';
+import axios from 'axios';
 
 const Signup = () => {
     const [userDetails, setUserDetails] = useState({
@@ -32,8 +33,15 @@ const Signup = () => {
                 throw res?.error;
             }
             localStorage.setItem('token', 'Bearer ' + res.data.token);
-            axiosInstance.defaults.headers.common['token'] =
-                'Bearer ' + res.data.token;
+            axios.interceptors.request.use(
+                (config) => {
+                    config.headers['token'] = 'Bearer ' + res.data.token;
+                    return config;
+                },
+                (error) => {
+                    return Promise.reject(error);
+                }
+            );
 
             dispatch(
                 setAuthenticated({

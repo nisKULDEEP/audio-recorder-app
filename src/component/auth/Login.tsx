@@ -7,9 +7,11 @@ import { setAuthenticated } from '../../store/authReducer';
 import './index.css';
 import toast from 'react-hot-toast';
 import { ResponseType } from '../interface';
+import axios from 'axios';
 
 const Login = () => {
     const [userDetails, setUserDetails] = useState({ email: '', password: '' });
+    const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -27,8 +29,16 @@ const Login = () => {
                 throw res.error.response.data.message || 'signup error';
             }
             localStorage.setItem('token', 'Bearer ' + res.data.token);
-            axiosInstance.defaults.headers.common['token'] =
-                'Bearer ' + res.data.token;
+            axios.interceptors.request.use(
+                (config) => {
+                    config.headers['token'] = 'Bearer ' + res.data.token;
+                    return config;
+                },
+                (error) => {
+                    return Promise.reject(error);
+                }
+            );
+
             dispatch(
                 setAuthenticated({
                     isLoggedIn: true,
@@ -68,7 +78,14 @@ const Login = () => {
                     onChange={handleChange}
                     value={userDetails.password}
                 />
-                <button onClick={handleLogin} className="login-button">
+                <button
+                    onClick={handleLogin}
+                    className="login-button"
+                    disabled={
+                        isLoading &&
+                        !(userDetails.email && userDetails.password)
+                    }
+                >
                     Login
                 </button>
                 <p className="message">

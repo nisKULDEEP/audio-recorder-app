@@ -8,3 +8,14 @@ const axiosInstance = axios.create({
 });
 
 export default axiosInstance;
+
+// Request interceptors for API calls
+axios.interceptors.request.use(
+    (config) => {
+        config.headers['token'] = localStorage.getItem('token');
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);

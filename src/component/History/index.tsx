@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import ContentWrapper from '../ContentWrapper';
 import './index.css';
 import axiosInstance from '../../store/axiosConfig';
-import toast from 'react-hot-toast';
 
 const History = () => {
     const [recordingListing, setRecordingListing] = useState([]);
