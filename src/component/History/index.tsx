@@ -24,7 +24,8 @@ const History = () => {
                             type: 'audio/mpeg'
                         })
                     ),
-                    id: item._id
+                    id: item._id,
+                    type: item.type
                 }))
             );
         } catch (error: any) {
@@ -39,16 +40,22 @@ const History = () => {
             setIsLoading(false);
         }
     };
+
     const handleDelete = async (recordingId: string) => {
         try {
+            setRecordingListing(
+                recordingListing.filter(
+                    (item: { id: string }) => item.id != recordingId
+                )
+            );
+            toast.success('Recording deleted successfully');
+
             await axiosInstance.delete(`/recording/${recordingId}`, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     token: localStorage.getItem('token')
                 }
             });
-            getRecordings();
-            toast.success('Recording deleted successfully');
         } catch (error: any) {
             toast.error(
                 error?.response?.data?.message || 'Something went wrong'
@@ -86,9 +93,10 @@ const History = () => {
         <ContentWrapper>
             <div className="audio-listing-container">
                 {recordingListing.map(
-                    (record: { url: string; id: string }, idx) => (
+                    (record: { url: string; id: string; type: string }) => (
                         <div className="audio-card-wrapper">
-                            <h3 className="">{`Recording-${idx + 1}`}</h3>
+                            <h3 className="title">{`Recording-${record.id}`}</h3>
+                            <div className="label">{record.type}</div>
                             <div className="audio-card">
                                 <audio controls src={record.url}></audio>
                                 <button

@@ -17,6 +17,9 @@
     padding: 16px;
     width: fit-content;
     border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 12px;
 }
 
 /* CSS */
@@ -148,4 +151,16 @@
 
 img {
     width: 250px;
+}
+
+.label {
+    border-radius: 8px;
+    background-color: rgb(254, 161, 173);
+    color: #060606;
+    padding: 4px 8px;
+    width: fit-content;
+    font-size: 12px;
+}
+.title {
+    line-height: 0;
 }
