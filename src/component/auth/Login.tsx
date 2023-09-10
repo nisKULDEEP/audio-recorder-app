@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import ContentWrapper from '../ContentWrapper';
 import axiosInstance from '../../store/axiosConfig';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { setAuthenticated } from '../../store/authReducer';
 import './index.css';
 import toast from 'react-hot-toast';
+import { ResponseType } from '../interface';
 
 const Login = () => {
     const [userDetails, setUserDetails] = useState({ email: '', password: '' });
@@ -15,11 +16,14 @@ const Login = () => {
 
     const handleLogin = async () => {
         try {
-            const res = await axiosInstance.post('/users/signin', {
-                ...userDetails
-            });
+            const res: ResponseType = await axiosInstance.post(
+                '/users/signin',
+                {
+                    ...userDetails
+                }
+            );
 
-            if ('error' in res) {
+            if (res?.error) {
                 throw res.error.response.data.message || 'signup error';
             }
             localStorage.setItem('token', 'Bearer ' + res.data.token);
@@ -35,7 +39,7 @@ const Login = () => {
             );
             toast.success('Login successful');
             navigate('/');
-        } catch (error) {
+        } catch (error: any) {
             toast.error(
                 error?.response?.data?.message || 'Something went wrong'
             );

@@ -7,6 +7,7 @@ import { setAuthenticated } from '../../store/authReducer';
 
 import './index.css';
 import toast from 'react-hot-toast';
+import { ResponseType } from '../interface';
 
 const Signup = () => {
     const [userDetails, setUserDetails] = useState({
@@ -19,11 +20,14 @@ const Signup = () => {
 
     const handleLogin = async () => {
         try {
-            const res = await axiosInstance.post('/users/signup', {
-                ...userDetails
-            });
+            const res: ResponseType = await axiosInstance.post(
+                '/users/signup',
+                {
+                    ...userDetails
+                }
+            );
 
-            if ('error' in res) {
+            if (res?.error) {
                 console.log(res);
                 throw res?.error;
             }
@@ -41,7 +45,7 @@ const Signup = () => {
             );
             toast.success('Signup successful');
             navigate('/');
-        } catch (error: string) {
+        } catch (error: any) {
             toast.error(error?.response?.data?.message || 'signup error');
         }
     };

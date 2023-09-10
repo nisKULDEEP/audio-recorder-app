@@ -15,22 +15,19 @@ const History = () => {
     const getRecordings = async () => {
         setIsLoading(true);
         try {
-            const res = await axiosInstance.get('/recording/listing');
+            const res: any = await axiosInstance.get('/recording/listing');
 
             setRecordingListing(
-                res.data.map((item: any) => {
-                    console.log();
-                    return {
-                        url: URL.createObjectURL(
-                            new Blob([new Uint8Array(item.audioData.data)], {
-                                type: 'audio/mpeg'
-                            })
-                        ),
-                        id: item._id
-                    };
-                })
+                res.data.map((item: any) => ({
+                    url: URL.createObjectURL(
+                        new Blob([new Uint8Array(item.audioData.data)], {
+                            type: 'audio/mpeg'
+                        })
+                    ),
+                    id: item._id
+                }))
             );
-        } catch (error) {
+        } catch (error: any) {
             setLocalError({
                 status: true,
                 message: error.response.data.message
@@ -52,7 +49,7 @@ const History = () => {
             });
             getRecordings();
             toast.success('Recording deleted successfully');
-        } catch (error) {
+        } catch (error: any) {
             toast.error(
                 error?.response?.data?.message || 'Something went wrong'
             );

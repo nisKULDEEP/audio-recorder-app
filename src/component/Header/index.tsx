@@ -2,19 +2,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectLoggedIn, setAuthenticated } from '../../store/authReducer';
 import { Link, useNavigate } from 'react-router-dom';
 import ContentWrapper from '../ContentWrapper';
-import useIsMobile from '../../hooks/useIsMobile';
-import './index.css';
 import axiosInstance from '../../store/axiosConfig';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { ResponseType } from '../interface';
+import './index.css';
 
 const loginExceptEndpoints = ['/login', '/signup'];
 
 const Header = () => {
     const isLoggedIn = useSelector(selectLoggedIn);
-    const isMobile = useIsMobile();
     const navigate = useNavigate();
-    const [error, setError] = useState({ status: false, msg: '' });
     const dispatch = useDispatch();
 
     const handleLogout = async () => {
@@ -30,11 +28,9 @@ const Header = () => {
                 })
             );
             navigate('/login');
+            toast.success('Logged out successfully');
         } catch (err: any) {
-            setError({
-                status: true,
-                msg: err.data.msg || 'Something went wrong'
-            });
+            toast.error(err?.response?.data?.message || 'Something went wrong');
         }
     };
 
@@ -42,7 +38,9 @@ const Header = () => {
         try {
             const token = localStorage.getItem('token');
             if (token) {
-                const res = await axiosInstance.get('/users/details');
+                const res: ResponseType = await axiosInstance.get(
+                    '/users/details'
+                );
 
                 dispatch(
                     setAuthenticated({
@@ -54,7 +52,7 @@ const Header = () => {
                 );
                 toast.success('Login successful');
             }
-        } catch (error) {
+        } catch (error: any) {
             toast.error(
                 error?.response?.data?.message || 'Something went wrong'
             );

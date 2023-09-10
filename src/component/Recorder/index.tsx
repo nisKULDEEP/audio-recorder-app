@@ -7,10 +7,10 @@ import toast from 'react-hot-toast';
 const Recorder = () => {
     const [isRecording, setIsRecording] = useState(false);
     const [audioChunks, setAudioChunks] = useState([]);
-    const [mediaRecorder, setMediaRecorder] = useState(null);
-    const [audioURL, setAudioURL] = useState(null);
+    const [mediaRecorder, setMediaRecorder] = useState<any>(null);
+    const [audioURL, setAudioURL] = useState<string>('');
     const [isRecordingSaved, setIsRecordingSaved] = useState(false);
-    const [audioBlob, setAudioBlob] = useState(null);
+    const [audioBlob, setAudioBlob] = useState<any>(null);
     const [selectedOption, setSelectedOption] = useState('Focused Listening');
 
     const handleSelectChange = (event: any) => {
@@ -23,7 +23,7 @@ const Recorder = () => {
             formData.append('audioFile', audioBlob, 'recording.ogg');
             formData.append('type', selectedOption);
 
-            const response = await axiosInstance
+            const response: any = await axiosInstance
                 .post('/recording/upload', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
@@ -33,9 +33,9 @@ const Recorder = () => {
                 .then((response: any) => {
                     setIsRecordingSaved(true);
                     toast.success('Recording saved successfully!');
-                    setAudioURL(null);
+                    setAudioURL('');
                 })
-                .catch((err) =>
+                .catch((err: any) =>
                     toast.error(
                         err?.response?.data?.message || 'Something went wrong'
                     )
@@ -61,7 +61,7 @@ const Recorder = () => {
 
             recorder.onstop = () => {
                 const blob = new Blob(chunks, { type: 'audio/wav' });
-                const url = URL.createObjectURL(blob);
+                const url: string = URL.createObjectURL(blob);
                 setAudioURL(url);
                 setAudioChunks([]);
                 setMediaRecorder(null);
