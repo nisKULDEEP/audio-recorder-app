@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 
 const Recorder = () => {
     const [isRecording, setIsRecording] = useState(false);
-    const [audioChunks, setAudioChunks] = useState([]);
+    const [, setAudioChunks] = useState([]);
     const [mediaRecorder, setMediaRecorder] = useState<any>(null);
     const [audioURL, setAudioURL] = useState<string>('');
     const [isRecordingSaved, setIsRecordingSaved] = useState(false);
@@ -23,14 +23,14 @@ const Recorder = () => {
             formData.append('audioFile', audioBlob, 'recording.ogg');
             formData.append('type', selectedOption);
 
-            const response: any = await axiosInstance
+            await axiosInstance
                 .post('/recording/upload', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         token: localStorage.getItem('token')
                     }
                 })
-                .then((response: any) => {
+                .then(() => {
                     setIsRecordingSaved(true);
                     toast.success('Recording saved successfully!');
                     setAudioURL('');

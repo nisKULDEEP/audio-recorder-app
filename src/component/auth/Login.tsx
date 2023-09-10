@@ -17,6 +17,7 @@ const Login = () => {
     const dispatch = useDispatch();
 
     const handleLogin = async () => {
+        setIsLoading(true);
         try {
             const res: ResponseType = await axiosInstance.post(
                 '/users/signin',
@@ -53,6 +54,8 @@ const Login = () => {
             toast.error(
                 error?.response?.data?.message || 'Something went wrong'
             );
+        } finally {
+            setIsLoading(false);
         }
     };
     const handleChange = (event: any) => {
