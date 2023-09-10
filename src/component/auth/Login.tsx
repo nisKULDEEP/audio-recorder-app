@@ -7,7 +7,6 @@ import { setAuthenticated } from '../../store/authReducer';
 import './index.css';
 import toast from 'react-hot-toast';
 import { ResponseType } from '../interface';
-import axios from 'axios';
 
 const Login = () => {
     const [userDetails, setUserDetails] = useState({ email: '', password: '' });
