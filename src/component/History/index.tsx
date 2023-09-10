@@ -95,7 +95,7 @@ const History = () => {
                 {recordingListing.map(
                     (record: { url: string; id: string; type: string }) => (
                         <div className="audio-card-wrapper">
-                            <h3 className="title">{`Recording-${record.id}`}</h3>
+                            <div className="title">{`Recording-${record.id}`}</div>
                             <div className="label">{record.type}</div>
                             <div className="audio-card">
                                 <audio controls src={record.url}></audio>

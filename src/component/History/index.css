@@ -5,6 +5,12 @@
     align-items: center;
 }
 
+@media only screen and (max-width: 600px) {
+    .audio-card {
+        flex-direction: column;
+    }
+}
+
 .audio-listing-container {
     display: flex;
     flex-direction: column;
@@ -62,7 +68,9 @@
 
 @media (min-width: 768px) {
     .delete-button {
-        padding: 12px 24px;
+        padding: 12px 18px;
+        font-size: 12px;
+        font-weight: 700;
     }
 }
 
@@ -162,5 +170,7 @@ img {
     font-size: 12px;
 }
 .title {
-    line-height: 0;
+    line-height: 24px;
+    font-size: 18px;
+    font-weight: 700;
 }
