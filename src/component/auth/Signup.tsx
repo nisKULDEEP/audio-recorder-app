@@ -33,7 +33,8 @@ const Signup = () => {
                 throw res?.error;
             }
             localStorage.setItem('token', 'Bearer ' + res.data.token);
-            axios.interceptors.request.use(
+
+            axiosInstance.interceptors.request.use(
                 (config) => {
                     config.headers['token'] = 'Bearer ' + res.data.token;
                     return config;
